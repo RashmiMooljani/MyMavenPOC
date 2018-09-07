@@ -1,0 +1,25 @@
+#!groovy
+
+pipeline{
+agent any
+  parameters{
+    choice(name:"env",description:"env under test",choices:"dev\test")
+    
+  }
+  tools {
+    maven "maven3.5.4"
+    jdk "jdk8"
+  }
+  
+  environment{
+    MAVEN_OPTS = "-Denv=params.env -Dnamespace=params.namespace"
+  }
+  
+  stages{
+    stage("Clean Test"){
+      steps{
+        sh "mvn clean install -P $env"
+      }
+    }
+  }
+}
